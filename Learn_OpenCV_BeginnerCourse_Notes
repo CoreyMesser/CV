@@ -1,0 +1,429 @@
+Mat class introduced in OpenCV 2.0
+- basic image container
+- serves as the Matrix
+
+1. Mat as an Image Container
+
+- Header : matrix header, size of matrix, medium of strg, address of strg
+- Data : pointer to the address in memory that sotres pixel val of img
+
+1.1 Read an image
+
+imread
+
+// Read image in BGR format
+Mat A = imread("image.jpg", IMREAD_COLOR);
+// Read image in grayscale
+Mat A = imread("image.jpg", IMREAD_GRAYSCALE);
+
+1.2 Assignment Operation
+
+- data part of matrix not copied
+
+// Pointer of B points to the same data matrix as A
+Mat B(A);
+// C is assigned the same data matrix as A but a different header
+Mat C = A;
+
+1.3 Copy part of an image.
+- full image not always used, often only part, such as face rec
+- headers are changed to focus on area and drop the rest of pic
+
+// Copy a Rectangle of width 50 and height 50 from point (15,15)
+Mat B(A, Rect(15, 15, 50, 50));
+/* Specific rows and columns can also be selected using 
+the Range function */
+// Copies from rows 2 to 4 and columns 4 to 6
+Mat B = A(Range(2, 4), Range(4,6));
+
+1.4 Clone an image
+// The clone method is used to copy data and header. 
+B = A.clone();
+
+1.5 Clone an image with a mask
+// The copyTo method allows you to clone with a binary mask.
+A.copyTo(B,mask);
+
+1.6  Fine # of rows, col, channels
+// Find rows and columns of a Mat object
+Mat M;
+// To find the number of rows
+M.rows;
+// To find the number of columns
+M.cols;
+// To find the number of channels
+M.channels() 
+
+// Find height and width using Size
+Mat M;
+Size sz = M.size();
+// number of rows
+sz.height;
+// number of columns
+sz.width;
+
+2. Mat as a Matrix
+CV_<bit-depth>{U|S|F}C<number_of_channels>
+
+Where, U, S and F stand for Unsigned, Signed and Floating Point respectively.
+
+2.1.1. Using Constructor
+Mat M(no. of rows, no. of cols, no. of channels, color)
+
+
+// Create a 3x3 Matrix using the constructor
+Mat M(3,3,CV_8UC3, Scalar(0,255,180));
+Creates a 3 by 3 matrix having 9 elements. Each element has three components.
+
+
+// Print a matrix using
+cout << M << endl; 
+// Ouput
+ [0,255,180, 0,255,180, 0,255,180;
+  0,255,180, 0,255,180, 0,255,180;
+  0,255,180, 0,255,180, 0,255,180]
+
+  http://docs.opencv.org/3.0-beta/doc/tutorials/core/mat_the_basic_image_container/mat_the_basic_image_container.html
+
+http://docs.opencv.org/3.0-beta/modules/core/doc/basic_structures.html
+
+http://aishack.in/tutorials/opencvs-interface/
+
+http://opencvexamples.blogspot.com/2013/09/creating-matrix-in-different-ways.html
+
+
+NUMPY
+
+NumPY array is a grid of values, indexed by a tuple of nonnegative integers.
+
+3.1. Read an image
+In OpenCV-Python environment, we use the function cv2.imread() to read an image. The image should be in the working directory or a full path of the image should be given.
+
+cv2.IMREAD_COLOR : Loads a color image. Any transparency of image will be neglected. It is the default flag.
+cv2.IMREAD_GRAYSCALE : Loads image in grayscale mode
+cv2.IMREAD_UNCHANGED : Loads image as such including alpha channel
+Instead of these three flags, you can simply pass integers 1, 0 or -1 respectively.
+
+# Import numpy and OpenCV
+import numpy as np
+import cv2
+# Load a color image in grayscale
+img = cv2.imread('bat.jpg',0)
+
+
+# Import numpy and OpenCV
+import numpy as np
+import cv2 
+# Load a color image in grayscale
+img = cv2.imread('bat.jpg',0)
+# Assigning the image stored in numpy array img to 
+# another numpy array img_copy
+img_copy = img.copy()
+
+
+# Import numpy and OpenCV
+import numpy as np
+import cv2 
+# Load a color image in grayscale
+img = cv2.imread('bat.jpg',0)
+# Copies from rows 100 to 150 and columns 100 to 250
+cropped = img[100:150,100:250]
+
+
+# Import numpy and OpenCV
+ import numpy as np
+ import cv2 
+ # Load a color image in BGR
+ img = cv2.imread('bat.jpg',1)
+ # Find the number of rows in the image
+ imgRows = img.shape[0] 
+ # Find the number of columns in the image
+ imgCols = img.shape[1]
+ # Find the number of channels in the image
+ Channels = img.shape[2]
+
+
+ http://cs231n.github.io/python-numpy-tutorial/
+
+https://docs.scipy.org/doc/numpy-dev/user/quickstart.html
+
+https://engineering.ucsb.edu/~shell/che210d/numpy.pdf
+
+
+
+
+
+
+Python [ Read, write and display image ] [ readWriteDisplay.py ]
+
+
+
+import cv2
+  
+# This program reads an image using imread() from the images directory, 
+# converts it to gray scale using cvtColor() and displays it using 
+# imshow(). It also saves the image to the disk using the 
+# imwrite() function
+image = cv2.imread("boy.jpg")
+  
+# Check for invalid input
+if image is None:  # Check for invalid input
+    print("Could not open or find the image")
+
+# convert color image to gray
+grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+ 
+ # Save result
+cv2.imwrite("imageGray.jpg", grayImage)
+ 
+# Create a window for display.
+cv2.namedWindow("image", cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow("gray image", cv2.WINDOW_NORMAL)
+ 
+# Display image
+cv2.imshow("image", image)
+cv2.imshow("gray image", grayImage)
+ 
+# Wait for a keystroke in the window
+cv2.waitKey(0)
+
+
+Python [ Crop and Resize ] [ cropAndResize.py ]
+
+# This program demonstrates how we can use the resize function of OpenCV 
+# to shrink and enlarge images. It then uses the range function to crop 
+# an image and extract a portion of the image.   
+import cv2
+
+# Reading the image
+source = cv2.imread("boy.jpg",1)
+
+scaleX = 0.6
+scaleY = 0.6
+
+#The resize function has the following prototype:
+#destinationImage = cv2.resize(sourceImage, (,), scale factor in 
+#x direction, scale factor in y direction, interpolation method) 
+
+#We can either specify the size of the output to determine the height 
+#and width of the output or we can add the scaling factors and the Size 
+#will be calculated automatically. 
+
+# Scaling Down the image 0.6 times
+scaleDown = cv2.resize(source, None, fx= scaleX, fy= scaleY, interpolation= cv2.INTER_LINEAR)
+
+# Scaling up the image 1.8 times
+scaleUp = cv2.resize(source, None, fx= scaleX*3, fy= scaleY*3, interpolation= cv2.INTER_LINEAR)
+ 
+#For cropping in python we can directly use the slicing facility of 
+#numpy arrays and slice it by first specifying the rows and then 
+#the columns of the cropping region. 
+
+#Cropped Image
+crop = source[50:150,20:200]
+
+# Displaying all the images
+cv2.imshow("Original", source)
+cv2.imshow("Scaled Down", scaleDown)
+cv2.imshow("Scaled Up", scaleUp)
+cv2.imshow("Cropped Image",crop)
+
+cv2.waitKey(0)
+
+
+
+
+
+
+In OpenCV, we can rotate images about any point ( let’s call it center ) and by an angle ( let’s simply call this angle ).
+
+In OpenCV, a rotation is represented as a 2x3 Matrix because rotations belong to the special class of transforms called the Affine Transform which is covered in the next section.
+
+The getRotationMatrix2D function is used to get the matrix which will define the rotation.
+
+The parameters for the function is
+
+rotMat = getRotationMatrix2D(center, angle, scale)
+
+
+
+Python [ Rotation ] [ rotate.py ]
+
+
+# This program reads an image and rotates it. The rotation matrix 
+# is obtained using the getRotationMatrix2D function of OpenCV
+import cv2
+
+source = cv2.imread("boy.jpg",1)
+
+# Getting the dimesnions of the image
+dim = source.shape
+
+rotationAngle = -30
+scaleFactor = 1
+
+# Rotating the image by 180 degrees about the center
+# dim[0] stores the no of rows and dim[1] no of columns
+
+#The getRotationMatrix2D function takes the following parameters:
+#Center: point about which rotation will occur
+#rotationAngle: angle by which rotation is occurring
+#Scale : an optional scaling factor
+
+rotationMatrix = cv2.getRotationMatrix2D((dim[1]/2, dim[0]/2), rotationAngle, scaleFactor)
+
+print(rotationMatrix)
+
+result = cv2.warpAffine(source, rotationMatrix, (dim[1],dim[0]))
+
+cv2.imshow("Original", source)
+cv2.imshow("Rotated Image", result)
+
+cv2.waitKey(0)
+
+
+
+
+
+Python [ Usage ]
+cv2.line ( image, starting point , end point , color , line thickness, line type)
+cv2.circle ( image, center, radius, color of border, line thickness / fill type, line type)
+cv2.ellipse ( image, center, axes lengths, rotation degree of ellipse, starting angle , ending angle, color, line thickness / fill type, line type)
+cv2.rectangle ( image, upper left corner vertex, lower right corner vertex, line thickness / fill type, line type)
+cv2.putText ( image, text, starting point of text, font type, font scale, color, linetype )
+
+
+Python [ Draw over Image] [ imageDraw.py ]
+
+import cv2
+import numpy as np
+
+image = cv2.imread('mark.jpg')
+
+# Draw a line
+imageLine = image.copy()
+cv2.line(imageLine, (322, 179), (400, 183), (0, 255, 0), thickness=2, lineType=cv2.LINE_AA)
+cv2.imshow("imageLine", imageLine)
+cv2.imwrite("imageLine.jpg", imageLine)
+
+# Draw a circle
+imageCircle = image.copy()
+cv2.circle(imageCircle, (350, 200), 150, (0, 255, 0), thickness=2, lineType=cv2.LINE_AA)
+cv2.imshow("imageCircle", imageCircle)
+cv2.imwrite("imageCircle.jpg", imageCircle)
+
+# Draw an ellipse
+# IMP Note: Ellipse Centers and Axis lengths must be integers
+imageEllipse = image.copy()
+cv2.ellipse(imageEllipse, (360, 200), (100, 170), 45, 0, 360, (255, 0, 0), thickness=2, lineType=cv2.LINE_AA)
+cv2.ellipse(imageEllipse, (360, 200), (100, 170), 135, 0, 360, (0, 0, 255), thickness=2, lineType=cv2.LINE_AA)
+cv2.imshow("ellipse", imageEllipse)
+cv2.imwrite("imageEllipse.jpg", imageEllipse)
+
+# Draw a rectangle (thickness is a positive integer)
+imageRectangle = image.copy()
+cv2.rectangle(imageRectangle, (208, 55), (450, 355), (0, 255, 0), thickness=2, lineType=cv2.LINE_8)
+cv2.imshow("rectangle", imageRectangle)
+cv2.imwrite("imageRectangle.jpg", imageRectangle)
+
+# Put text into image
+imageText = image.copy()
+cv2.putText(imageText, "Mark Zuckerberg", (205, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+cv2.imshow("text", imageText)
+cv2.imwrite("imageText.jpg", imageText)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+http://docs.opencv.org/3.1.0/dc/da5/tutorial_py_drawing_functions.html
+
+http://opencvexamples.blogspot.com/2013/10/basic-drawing-examples.html
+
+
+
+
+
+Python [ Reading a video file ] [ videoRead.py ]
+
+#In the following code, we will use the VideoCapture Object 
+#to read a video file and display it.
+# Import OpenCV and numpy
+import cv2
+import numpy as np
+
+# Create a VideoCapture object and read from input file
+# If the input is the camera, pass 0 instead of the video file name
+cap = cv2.VideoCapture('chaplin.mp4')
+
+# Check if camera opened successfully
+if (cap.isOpened()== False): 
+  print("Error opening video stream or file")
+
+#Read and display video frames until video is completed or 
+#user quits by pressing ESC
+while(cap.isOpened()):
+  # Capture frame-by-frame
+  ret, frame = cap.read()
+  if ret == True:
+
+    # Display the resulting frame
+    cv2.imshow('Frame',frame)
+
+
+
+
+ 5.2. OpenCV Homography Example [ Python ]
+Images in Figure 2. can also be generated using the following Python code. The code below shows how to take four corresponding points in two images and warp image onto the other.
+
+
+#!/usr/bin/env python
+ 
+import cv2
+import numpy as np
+ 
+if __name__ == '__main__' :
+ 
+    # Read source image.
+    im_src = cv2.imread('book2.jpg')
+    # Four corners of the book in source image
+    pts_src = np.array([[141, 131], [480, 159], [493, 630],[64, 601]])
+ 
+ 
+    # Read destination image.
+    im_dst = cv2.imread('book1.jpg')
+    # Four corners of the book in destination image.
+    pts_dst = np.array([[318, 256],[534, 372],[316, 670],[73, 473]])
+ 
+    # Calculate Homography
+    h, status = cv2.findHomography(pts_src, pts_dst)
+     
+    # Warp source image to destination based on homography
+    im_out = cv2.warpPerspective(im_src, h, (im_dst.shape[1],im_dst.shape[0]))
+     
+    # Display images
+    cv2.imshow("Source Image", im_src)
+    cv2.imshow("Destination Image", im_dst)
+    cv2.imshow("Warped Source Image", im_out)
+ 
+    cv2.waitKey(0)
+
+Here are the steps.
+
+Write a user interface to collect four corners of the book. Let’s call these points pts_src.
+We need to know the aspect ratio of the book. For this book, the aspect ratio ( width / height ) is 3/4. So we can choose the output image size to be 300×400, and our destination points ( pts_dst ) to be (0,0), (299,0), (299,399) and (0,399)
+Obtain the homography using pts_src and pts_dst .
+Apply the homography to the source image to obtain the image in Figure 3.
+
+
+https://en.wikipedia.org/wiki/Viola–Jones_object_detection_framework
+http://www.merl.com/publications/docs/TR2004-043.pdf
+http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html
+http://docs.opencv.org/trunk/d7/d8b/tutorial_py_face_detection.html
+http://docs.opencv.org/3.2.0/db/d28/tutorial_cascade_classifier.html
+http://docs.opencv.org/trunk/dc/d88/tutorial_traincascade.html
+http://www.pyimagesearch.com/2015/05/11/creating-a-face-detection-api-with-python-and-opencv-in-just-5-minutes/
+http://docs.opencv.org/2.4/doc/tutorials/core/file_input_output_with_xml_yml/file_input_output_with_xml_yml.html
+
+
+Optical Character Recognition (OCR)
